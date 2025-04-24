@@ -1,0 +1,17 @@
+{
+  "cdn_url": null,
+  "directly_verified": false,
+  "evidence": "https://github.com/bambulab/BambuStudio/tree/V02.00.03.54",
+  "pack_version": "02.00.00.87",
+  "provenance": "reconstructed-git",
+  "source_bbl_json_blob": "1e58526932a7474f09447f036dab4d79ee9efdc9",
+  "source_commit": "c9f4cbc94be325dfda6ab694ddec2cfffe482284",
+  "source_commit_time": "2025-04-24T19:19:29+08:00",
+  "source_revision": "V02.00.03.54",
+  "source_tree": "9f7ca2c35250dd56f97adeeb5503f31da72be4da",
+  "uncertainty": [
+    "Public Git content is not proof that an OTA archive was published.",
+    "A live OTA archive may differ from this tree despite sharing the BBL.json version."
+  ],
+  "source_path": "sources/git/02.00.00.87-c9f4cbc94be3"
+}

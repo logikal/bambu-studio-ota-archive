@@ -1,0 +1,22 @@
+{
+    "type": "filament",
+    "name": "Bambu TPU 95A HF @BBL X1E",
+    "inherits": "Bambu TPU 95A HF @base",
+    "from": "system",
+    "setting_id": "GFSU00_04",
+    "instantiation": "true",
+    "filament_deretraction_speed": [
+        "nil"
+    ],
+    "filament_retraction_length": [
+        "0.8"
+    ],
+    "filament_retraction_speed": [
+        "nil"
+    ],
+    "compatible_printers": [
+        "Bambu Lab X1E 0.4 nozzle",
+        "Bambu Lab X1E 0.6 nozzle",
+        "Bambu Lab X1E 0.8 nozzle"
+    ]
+}

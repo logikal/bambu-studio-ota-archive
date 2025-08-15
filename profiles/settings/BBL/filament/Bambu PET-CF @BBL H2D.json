@@ -98,6 +98,9 @@
         "0",
         "0"
     ],
+    "filament_printable": [
+        "1"
+    ],
     "hole_coef_2": [
         "-0.012"
     ],

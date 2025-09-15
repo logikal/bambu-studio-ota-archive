@@ -42,6 +42,9 @@
         "-1",
         "-1"
     ],
+    "filament_printable": [
+        "1"
+    ],
     "filament_retract_before_wipe": [
         "nil",
         "nil"
@@ -98,8 +101,9 @@
         "0",
         "0"
     ],
-    "filament_printable": [
-        "1"
+    "filament_adaptive_volumetric_speed": [
+        "0",
+        "0"
     ],
     "hole_coef_2": [
         "-0.012"
@@ -125,6 +129,10 @@
     "retraction_distances_when_ec": [
         "10",
         "10"
+    ],
+    "volumetric_speed_coefficients": [
+        "0 0 0 0 0 0",
+        "0 0 0 0 0 0"
     ],
     "compatible_printers": [
         "Bambu Lab H2D 0.4 nozzle",

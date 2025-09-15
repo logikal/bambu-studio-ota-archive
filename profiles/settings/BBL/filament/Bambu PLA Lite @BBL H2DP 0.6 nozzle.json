@@ -116,6 +116,10 @@
         "0",
         "0"
     ],
+    "filament_adaptive_volumetric_speed": [
+        "0",
+        "0"
+    ],
     "hole_coef_2": [
         "-0.0081"
     ],
@@ -137,6 +141,10 @@
     "retraction_distances_when_ec": [
         "10",
         "10"
+    ],
+    "volumetric_speed_coefficients": [
+        "0 0 0 0 0 0",
+        "0 0 0 0 0 0"
     ],
     "compatible_printers": [
         "Bambu Lab H2D Pro 0.6 nozzle"

@@ -15,8 +15,8 @@
         "35"
     ],
     "filament_deretraction_speed": [
-        "10",
-        "10"
+        "25",
+        "25"
     ],
     "filament_flow_ratio": [
         "1",
@@ -34,8 +34,8 @@
         "2"
     ],
     "filament_retraction_length": [
-        "2",
-        "2"
+        "1.5",
+        "1.5"
     ],
     "filament_retraction_speed": [
         "10",
@@ -48,6 +48,10 @@
     "filament_ramming_travel_time": [
         "20",
         "20"
+    ],
+    "filament_z_hop_types": [
+        "Spiral Lift",
+        "Spiral Lift"
     ],
     "impact_strength_z": [
         "88.7"
@@ -70,10 +74,11 @@
         "0",
         "0"
     ],
+    "slow_down_min_speed": [
+        "25"
+    ],
     "compatible_printers": [
-        "Bambu Lab H2D Pro 0.4 nozzle",
-        "Bambu Lab H2D Pro 0.6 nozzle",
-        "Bambu Lab H2D Pro 0.8 nozzle"
+        "Bambu Lab H2D Pro 0.4 nozzle"
     ],
     "filament_start_gcode": [
         "; filament start gcode\n"

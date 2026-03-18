@@ -11,6 +11,10 @@
     "eng_plate_temp_initial_layer": [
         "60"
     ],
+    "filament_cooling_before_tower": [
+        "10",
+        "10"
+    ],
     "filament_flow_ratio": [
         "1",
         "1"
@@ -47,6 +51,10 @@
     ],
     "supertack_plate_temp": [
         "0"
+    ],
+    "slow_down_min_speed": [
+        "20",
+        "20"
     ],
     "compatible_printers": [
         "Bambu Lab H2S 0.4 nozzle",

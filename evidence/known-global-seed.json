@@ -1,0 +1,38 @@
+{
+  "as_of": "2026-08-17",
+  "purpose": "First-live-run comparison only; not historical proof and not a fallback catalog.",
+  "source": "user-supplied seed inventory",
+  "families": {
+    "02.00": {
+      "version": "02.00.00.91",
+      "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.00.00.91/22021b5541/02.00.00.91.zip"
+    },
+    "02.01": {
+      "version": "02.01.00.19",
+      "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.01.00.19/fb728ec9c9/02.01.00.19.zip"
+    },
+    "02.02": {
+      "version": "02.02.00.02",
+      "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.02.00.02/7d8cdaa553/02.02.00.02.zip"
+    },
+    "02.03": {
+      "version": "02.03.00.05",
+      "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.03.00.05/8a4f7ed7b3/02.03.00.05.zip"
+    },
+    "02.04": {
+      "version": "02.04.00.10",
+      "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.04.00.10/ebf18539c1/02.04.00.10.zip"
+    },
+    "02.05": {
+      "version": "02.05.00.14",
+      "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.05.00.14/94e1473172/02.05.00.14.zip"
+    },
+    "02.06": {
+      "version": "02.06.00.05",
+      "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.06.00.05/ebc7c9ad1d/02.06.00.05.zip"
+    },
+    "02.07": null,
+    "02.08": null
+  }
+}
+

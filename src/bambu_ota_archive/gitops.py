@@ -56,6 +56,17 @@ def commit_pack(
             f"Same-version repack: {'yes' if repack else 'no'}",
         ]
     )
-    _git(root, "tag", "--no-sign", "-a", tag, "-m", annotation)
+    if not _git(root, "tag", "--list", tag):
+        _git(root, "tag", "--no-sign", "-a", tag, "-m", annotation)
     return commit, tag
 
+
+def commit_metadata_only(root: Path, catalog: Path, version: str, commit_date: str | None) -> str:
+    _git(root, "add", "--", str(catalog.relative_to(root)))
+    if not _git(root, "diff", "--cached", "--name-only"):
+        raise RuntimeError("metadata-only import produced no staged change")
+    env = {}
+    if commit_date:
+        env = {"GIT_AUTHOR_DATE": commit_date, "GIT_COMMITTER_DATE": commit_date}
+    _git(root, "commit", "--no-gpg-sign", "-m", f"catalog: record unavailable OTA {version}", env=env)
+    return _git(root, "rev-parse", "HEAD")

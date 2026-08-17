@@ -1,0 +1,118 @@
+{
+  "families": {
+    "02.00": {
+      "api_query_version": "02.00.00.00",
+      "query_url": "https://api.bambulab.com/v1/iot-service/api/slicer/resource?slicer%2Fsettings%2Fbbl=02.00.00.00&slicer%2Fprinter%2Fbbl=02.00.00.00",
+      "resources": [
+        {
+          "description": "The updates for this preset package are as follows:\nUpdate layer change gcode for H2D.Fix the issue where the pre-extrusion line is occasionally sticked onto the model when changing layers.",
+          "force_update": false,
+          "type": "slicer/settings/bbl",
+          "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.00.00.91/22021b5541/02.00.00.91.zip",
+          "version": "02.00.00.91"
+        }
+      ]
+    },
+    "02.01": {
+      "api_query_version": "02.01.00.00",
+      "query_url": "https://api.bambulab.com/v1/iot-service/api/slicer/resource?slicer%2Fsettings%2Fbbl=02.01.00.00&slicer%2Fprinter%2Fbbl=02.01.00.00",
+      "resources": [
+        {
+          "description": "The updates for this preset package are as follows:\n1. Added filament preset for Bambu PLA Tough+.",
+          "force_update": false,
+          "type": "slicer/settings/bbl",
+          "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.01.00.19/fb728ec9c9/02.01.00.19.zip",
+          "version": "02.01.00.19"
+        }
+      ]
+    },
+    "02.02": {
+      "api_query_version": "02.02.00.00",
+      "query_url": "https://api.bambulab.com/v1/iot-service/api/slicer/resource?slicer%2Fsettings%2Fbbl=02.02.00.00&slicer%2Fprinter%2Fbbl=02.02.00.00",
+      "resources": [
+        {
+          "description": "1. Adjusted the volumetric flow rate and temperature settings for PLA Tough+ on H2D to improve print success rate.\n2. Added filament presets for PLA Lite, PLA Translucent, and PLA Tough+ on H2D Pro.",
+          "force_update": false,
+          "type": "slicer/settings/bbl",
+          "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.02.00.02/7d8cdaa553/02.02.00.02.zip",
+          "version": "02.02.00.02"
+        }
+      ]
+    },
+    "02.03": {
+      "api_query_version": "02.03.00.00",
+      "query_url": "https://api.bambulab.com/v1/iot-service/api/slicer/resource?slicer%2Fsettings%2Fbbl=02.03.00.00&slicer%2Fprinter%2Fbbl=02.03.00.00",
+      "resources": [
+        {
+          "description": "The updates for this preset package are as follows:\n1. Update the machine start G-code for H2D Pro to support buildplate alignment detection and toolhead camera dirt detection.\n2. Update the machine start G-code and filament change G-code for P2S, Optimize the air conditioning mode for PETG-type filaments by adopting internal circulation, which enables better heat dissipation.\n",
+          "force_update": false,
+          "type": "slicer/settings/bbl",
+          "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.03.00.05/8a4f7ed7b3/02.03.00.05.zip",
+          "version": "02.03.00.05"
+        }
+      ]
+    },
+    "02.04": {
+      "api_query_version": "02.04.00.00",
+      "query_url": "https://api.bambulab.com/v1/iot-service/api/slicer/resource?slicer%2Fsettings%2Fbbl=02.04.00.00&slicer%2Fprinter%2Fbbl=02.04.00.00",
+      "resources": [
+        {
+          "description": "The updates for this preset package are as follows:\n1. Optimized the issue of filament leakage from the purge tower when printing with PLA Silk+ on the H2C.\n2. Update the parameters for newly-introduced  colors of TPU 90A, reduce voids and stringing issues in prints.",
+          "force_update": false,
+          "type": "slicer/settings/bbl",
+          "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.04.00.10/ebf18539c1/02.04.00.10.zip",
+          "version": "02.04.00.10"
+        }
+      ]
+    },
+    "02.05": {
+      "api_query_version": "02.05.00.00",
+      "query_url": "https://api.bambulab.com/v1/iot-service/api/slicer/resource?slicer%2Fsettings%2Fbbl=02.05.00.00&slicer%2Fprinter%2Fbbl=02.05.00.00",
+      "resources": [
+        {
+          "description": "The updates for this preset package are as follows:\n1. Fix the issue where the default value of the travel_short_distance_acceleration,slow_down_min_speed parameter is incorrect in the process presets for certain printer models.\n2. Updates the Machine Start G-code, Machine End G-code, and Filament Change G-code for P2S（Beta Firmware Version 01.01.50.40）, with the following enhancements:\n  1)New support for foreign object detection beneath the heated bed before printing.\n  2)New support for build plate detection, in cases where users forget to place the printing plate, intelligent detection and prompt measures are taken to prevent any other abnormalities from occurring.\n3. Update the parameters for Bambu PETG Basic to ensure compatibility with the all-new Bambu Lab PETG Basic",
+          "force_update": false,
+          "type": "slicer/settings/bbl",
+          "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.05.00.14/94e1473172/02.05.00.14.zip",
+          "version": "02.05.00.14"
+        }
+      ]
+    },
+    "02.06": {
+      "api_query_version": "02.06.00.00",
+      "query_url": "https://api.bambulab.com/v1/iot-service/api/slicer/resource?slicer%2Fsettings%2Fbbl=02.06.00.00&slicer%2Fprinter%2Fbbl=02.06.00.00",
+      "resources": [
+        {
+          "description": "1. Update the Machine start G-code for A1 and A1 mini to optimize the print heating logic for PLA materials on A-series printers.",
+          "force_update": false,
+          "type": "slicer/settings/bbl",
+          "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.06.00.05/ebc7c9ad1d/02.06.00.05.zip",
+          "version": "02.06.00.05"
+        }
+      ]
+    },
+    "02.07": {
+      "api_query_version": "02.07.00.00",
+      "query_url": "https://api.bambulab.com/v1/iot-service/api/slicer/resource?slicer%2Fsettings%2Fbbl=02.07.00.00&slicer%2Fprinter%2Fbbl=02.07.00.00",
+      "resources": []
+    },
+    "02.08": {
+      "api_query_version": "02.08.00.00",
+      "query_url": "https://api.bambulab.com/v1/iot-service/api/slicer/resource?slicer%2Fsettings%2Fbbl=02.08.00.00&slicer%2Fprinter%2Fbbl=02.08.00.00",
+      "resources": []
+    }
+  },
+  "generated_at": "2026-08-17T20:51:23Z",
+  "official_families": [
+    "02.00",
+    "02.01",
+    "02.02",
+    "02.03",
+    "02.04",
+    "02.05",
+    "02.06",
+    "02.07",
+    "02.08"
+  ],
+  "source": "global-api"
+}

@@ -54,6 +54,17 @@ class ArchiveSafetyTests(unittest.TestCase):
         with self.assertRaisesRegex(UnsafeArchive, "NUL"):
             _validated_name("bad\x00name")
 
+    def test_raw_nul_path_in_zip_central_directory(self) -> None:
+        archive = self.root / "nul.zip"
+        make_zip(archive, extras=[("badxname", b"x")])
+        data = bytearray(archive.read_bytes())
+        central = data.rfind(b"PK\x01\x02")
+        name_start = central + 46
+        data[name_start + 3] = 0
+        archive.write_bytes(data)
+        with self.assertRaisesRegex(UnsafeArchive, "NUL"):
+            validate_zip(archive, "02.04.00.10")
+
     def test_symlink(self) -> None:
         info = zipfile.ZipInfo("link")
         info.create_system = 3
@@ -124,4 +135,3 @@ class ArchiveSafetyTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

@@ -39,6 +39,7 @@ class Observation:
     publication_time: str | None
     publication_time_status: str
     directly_verified: bool
+    provenance_chain: list[str] = field(default_factory=list)
     same_version_repack: bool = False
     uncertainty: list[str] = field(default_factory=list)
     source_commit: str | None = None
@@ -55,4 +56,3 @@ class Observation:
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
-

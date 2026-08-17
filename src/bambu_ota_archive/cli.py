@@ -5,8 +5,10 @@ import json
 import sys
 from pathlib import Path
 
+from .audit import audit_repository
 from .capture import Archiver
 from .evidence import extract_log_file, resource_from_evidence
+from .gitops import commit_metadata_only, ensure_clean
 from .http import HttpClient
 from .reconstruction import commit_reconstruction, import_git_reconstruction
 
@@ -32,12 +34,13 @@ def build_parser() -> argparse.ArgumentParser:
     history.add_argument("--commit", action="store_true")
 
     reconstruct = subparsers.add_parser(
-        "reconstruct-git", help="import a separate, explicitly unverified public-Git profile state"
+        "reconstruct-git", help="append an explicitly unverified public-Git state to the profile timeline"
     )
     reconstruct.add_argument("--source-repo", type=Path, required=True)
     reconstruct.add_argument("--revision", required=True)
     reconstruct.add_argument("--evidence", required=True)
     reconstruct.add_argument("--commit", action="store_true")
+    subparsers.add_parser("audit", help="verify stored archives, catalog identities, and namespace separation")
     return parser
 
 
@@ -47,7 +50,12 @@ def main(argv: list[str] | None = None) -> int:
         count = extract_log_file(args.source, args.destination, args.evidence_id)
         print(f"extracted {count} profile resource record(s)")
         return 0
+    if args.command == "audit":
+        print(json.dumps(audit_repository(args.root), indent=2))
+        return 0
     if args.command == "reconstruct-git":
+        if args.commit:
+            ensure_clean(args.root)
         destination = import_git_reconstruction(args.root, args.source_repo, args.revision, args.evidence)
         if args.commit:
             commit_reconstruction(args.root, destination)
@@ -63,9 +71,19 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "import-history":
         archiver = Archiver(args.root, client, commit=args.commit)
         records = json.loads(args.manifest.read_text(encoding="utf-8"))
+        records = sorted(records, key=lambda item: item.get("publication_time") or item["first_observed_at"])
+        if args.commit:
+            ensure_clean(args.root)
         for record in records:
             if record.get("metadata_only"):
-                archiver.import_metadata_only(record)
+                added = archiver.import_metadata_only(record)
+                if added and args.commit:
+                    commit_metadata_only(
+                        args.root,
+                        archiver.catalog_path,
+                        record["pack_version"],
+                        record.get("publication_time") or record["first_observed_at"],
+                    )
                 continue
             resource = resource_from_evidence(record)
             family = record.get("compatibility_family") or ".".join(resource.version.split(".")[:2])

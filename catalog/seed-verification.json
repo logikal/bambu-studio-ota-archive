@@ -1,0 +1,95 @@
+{
+  "all_match": true,
+  "checked_at": "2026-08-17T20:51:23Z",
+  "comparisons": {
+    "02.00": {
+      "actual": {
+        "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.00.00.91/22021b5541/02.00.00.91.zip",
+        "version": "02.00.00.91"
+      },
+      "expected": {
+        "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.00.00.91/22021b5541/02.00.00.91.zip",
+        "version": "02.00.00.91"
+      },
+      "match": true
+    },
+    "02.01": {
+      "actual": {
+        "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.01.00.19/fb728ec9c9/02.01.00.19.zip",
+        "version": "02.01.00.19"
+      },
+      "expected": {
+        "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.01.00.19/fb728ec9c9/02.01.00.19.zip",
+        "version": "02.01.00.19"
+      },
+      "match": true
+    },
+    "02.02": {
+      "actual": {
+        "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.02.00.02/7d8cdaa553/02.02.00.02.zip",
+        "version": "02.02.00.02"
+      },
+      "expected": {
+        "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.02.00.02/7d8cdaa553/02.02.00.02.zip",
+        "version": "02.02.00.02"
+      },
+      "match": true
+    },
+    "02.03": {
+      "actual": {
+        "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.03.00.05/8a4f7ed7b3/02.03.00.05.zip",
+        "version": "02.03.00.05"
+      },
+      "expected": {
+        "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.03.00.05/8a4f7ed7b3/02.03.00.05.zip",
+        "version": "02.03.00.05"
+      },
+      "match": true
+    },
+    "02.04": {
+      "actual": {
+        "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.04.00.10/ebf18539c1/02.04.00.10.zip",
+        "version": "02.04.00.10"
+      },
+      "expected": {
+        "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.04.00.10/ebf18539c1/02.04.00.10.zip",
+        "version": "02.04.00.10"
+      },
+      "match": true
+    },
+    "02.05": {
+      "actual": {
+        "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.05.00.14/94e1473172/02.05.00.14.zip",
+        "version": "02.05.00.14"
+      },
+      "expected": {
+        "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.05.00.14/94e1473172/02.05.00.14.zip",
+        "version": "02.05.00.14"
+      },
+      "match": true
+    },
+    "02.06": {
+      "actual": {
+        "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.06.00.05/ebc7c9ad1d/02.06.00.05.zip",
+        "version": "02.06.00.05"
+      },
+      "expected": {
+        "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.06.00.05/ebc7c9ad1d/02.06.00.05.zip",
+        "version": "02.06.00.05"
+      },
+      "match": true
+    },
+    "02.07": {
+      "actual": null,
+      "expected": null,
+      "match": true
+    },
+    "02.08": {
+      "actual": null,
+      "expected": null,
+      "match": true
+    }
+  },
+  "note": "The user-supplied seed was used only for this first-live-run comparison.",
+  "seed_as_of": "2026-08-17"
+}

@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import stat
 import subprocess
 import tarfile
 import tempfile
-from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
 
 from .catalog import write_json_atomic
@@ -72,8 +72,9 @@ def import_git_reconstruction(root: Path, source_repo: Path, revision: str, evid
     if major < 2:
         raise ValueError("only Studio 2.x-or-later reconstructions are in scope")
     tree = str(_git(source_repo, "rev-parse", f"{commit}:resources/profiles/BBL")).strip()
+    bbl_blob = str(_git(source_repo, "rev-parse", f"{commit}:resources/profiles/BBL.json")).strip()
     commit_time = str(_git(source_repo, "show", "-s", "--format=%cI", commit)).strip()
-    destination = root / "reconstructions" / "git" / f"{version}-{commit[:12]}"
+    destination = root / "sources" / "git" / f"{version}-{commit[:12]}"
     with tempfile.TemporaryDirectory(prefix="bambu-git-reconstruction-") as temp_raw:
         temp = Path(temp_raw)
         tar_path = temp / "profiles.tar"
@@ -98,15 +99,18 @@ def import_git_reconstruction(root: Path, source_repo: Path, revision: str, evid
         expanded.mkdir()
         _safe_git_tar_extract(tar_path, expanded)
         staged = temp / "staged"
-        contents = staged / "contents"
-        shutil.copytree(expanded / "resources" / "profiles" / "BBL", contents)
-        shutil.copyfile(expanded / "resources" / "profiles" / "BBL.json", contents / "BBL.json")
+        profiles = staged / "profiles"
+        shutil.copytree(expanded / "resources" / "profiles" / "BBL", profiles / "BBL")
+        shutil.copyfile(expanded / "resources" / "profiles" / "BBL.json", profiles / "BBL.json")
         metadata = {
             "provenance": "reconstructed-git",
+            "provenance_chain": ["reconstructed-git"],
             "evidence": evidence,
             "pack_version": version,
             "source_commit": commit,
             "source_tree": tree,
+            "source_bbl_json_blob": bbl_blob,
+            "source_revision": revision,
             "source_commit_time": commit_time,
             "cdn_url": None,
             "directly_verified": False,
@@ -115,16 +119,37 @@ def import_git_reconstruction(root: Path, source_repo: Path, revision: str, evid
                 "A live OTA archive may differ from this tree despite sharing the BBL.json version.",
             ],
         }
+        metadata["source_path"] = str(destination.relative_to(root))
         write_json_atomic(staged / "metadata.json", metadata)
         destination.parent.mkdir(parents=True, exist_ok=True)
         if destination.exists():
             shutil.rmtree(destination)
         staged.replace(destination)
+        profile_root = root / "profiles" / "settings"
+        extracted_profiles = destination / "profiles"
+        if profile_root.exists():
+            shutil.rmtree(profile_root)
+        profile_root.parent.mkdir(parents=True, exist_ok=True)
+        extracted_profiles.replace(profile_root)
+        write_json_atomic(root / "timeline" / "settings.json", metadata)
     return destination
 
 
 def commit_reconstruction(root: Path, destination: Path) -> str:
-    subprocess.run(["git", "add", "--", str(destination.relative_to(root))], cwd=root, check=True)
+    metadata = json.loads((destination / "metadata.json").read_text(encoding="utf-8"))
+    subprocess.run(
+        [
+            "git",
+            "add",
+            "--",
+            str(destination.relative_to(root)),
+            "profiles/settings",
+            "timeline/settings.json",
+        ],
+        cwd=root,
+        check=True,
+    )
+    env = {**os.environ, "GIT_AUTHOR_DATE": metadata["source_commit_time"], "GIT_COMMITTER_DATE": metadata["source_commit_time"]}
     subprocess.run(
         [
             "git",
@@ -133,10 +158,33 @@ def commit_reconstruction(root: Path, destination: Path) -> str:
             "commit",
             "--no-gpg-sign",
             "-m",
-            f"reconstruct: Git profile state {destination.name}",
+            f"history: settings {metadata['pack_version']} (reconstructed Git)",
+        ],
+        cwd=root,
+        env=env,
+        check=True,
+    )
+    tag = f"reconstructed-git/{metadata['pack_version']}-{metadata['source_commit'][:12]}"
+    subprocess.run(
+        [
+            "git",
+            "-c",
+            "tag.gpgsign=false",
+            "tag",
+            "--no-sign",
+            "-a",
+            tag,
+            "-m",
+            "\n".join(
+                [
+                    "Bambu Studio profile state reconstructed from public Git",
+                    "Not a verified OTA archive",
+                    f"Pack version: {metadata['pack_version']}",
+                    f"Source commit: {metadata['source_commit']}",
+                ]
+            ),
         ],
         cwd=root,
         check=True,
     )
     return str(_git(root, "rev-parse", "HEAD")).strip()
-

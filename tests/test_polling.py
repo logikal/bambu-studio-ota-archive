@@ -39,8 +39,8 @@ class FakeClient:
         )
 
 
-def resource(family: str, revision: str, url: str) -> Resource:
-    return Resource("slicer/settings/bbl", f"{family}.00.{revision}", url, "profiles", False)
+def resource(family: str, revision: str, url: str, description: str = "profiles") -> Resource:
+    return Resource("slicer/settings/bbl", f"{family}.00.{revision}", url, description, False)
 
 
 class PollingTests(unittest.TestCase):
@@ -90,6 +90,23 @@ class PollingTests(unittest.TestCase):
         self.assertFalse(records[0]["same_version_repack"])
         self.assertTrue(records[1]["same_version_repack"])
         self.assertNotEqual(records[0]["archive_sha256"], records[1]["archive_sha256"])
+
+    def test_description_only_change_redownloads_without_duplicate_catalog_identity(self) -> None:
+        self.run_poll(["02.00"], {"02.00": [resource("02.00", "01", self.url_a, "first")]})
+        results, _ = self.run_poll(
+            ["02.00"], {"02.00": [resource("02.00", "01", self.url_a, "description changed")]}
+        )
+        self.assertTrue(results[0].changed)
+        self.assertEqual(len(read_observations(self.root / "catalog/observations.jsonl")), 1)
+        metadata = json.loads((self.root / "timeline/settings.json").read_text())
+        self.assertEqual(metadata["description"], "description changed")
+
+    def test_successive_packs_replace_one_diffable_profile_tree(self) -> None:
+        self.run_poll(["02.00"], {"02.00": [resource("02.00", "01", self.url_a)]})
+        self.run_poll(["02.00", "02.01"], {"02.01": [resource("02.01", "01", self.url_new)]})
+        self.assertEqual((self.root / "profiles/settings/profile.json").read_text(), "new-family")
+        sources = sorted((self.root / "sources/ota").glob("*/*/*/archive.zip"))
+        self.assertEqual(len(sources), 2)
 
     def test_new_family_is_captured_and_old_family_continues_polling(self) -> None:
         self.run_poll(["02.00"], {"02.00": [resource("02.00", "01", self.url_a)]})

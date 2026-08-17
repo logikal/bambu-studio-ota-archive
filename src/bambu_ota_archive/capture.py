@@ -22,7 +22,7 @@ from .catalog import (
 from .constants import MAIN_RESOURCE_TYPE
 from .discovery import baseline_for_family, discover_official_families, query_family
 from .gitops import commit_pack, ensure_clean
-from .http import HttpClient, polite_pause
+from .http import HttpClient, polite_pause, validate_profile_cdn_url
 from .models import Observation, Resource
 
 
@@ -80,6 +80,9 @@ class Archiver:
         self.inventory_path = self.root / "catalog" / "current-inventory.json"
         self.seed_path = self.root / "evidence" / "known-global-seed.json"
         self.seed_report_path = self.root / "catalog" / "seed-verification.json"
+
+    def ota_source_root(self, family: str, kind: str, version: str, sha256: str) -> Path:
+        return self.root / "sources" / "ota" / family / kind / f"{version}-{sha256[:12]}"
 
     def poll(self, *, families: list[str] | None = None) -> list[CaptureResult]:
         with repository_lock(self.root):
@@ -139,9 +142,9 @@ class Archiver:
                 state[key] = {"tuple": current_tuple, "observed_at": inventory["generated_at"]}
                 write_json_atomic(self.state_path, state)
                 if self.commit:
-                    metadata = read_json(
-                        self.root / "families" / family / resource_kind(resource.type) / "metadata.json", {}
-                    )
+                    kind = resource_kind(resource.type)
+                    source_root = self.ota_source_root(family, kind, resource.version, result.sha256 or "")
+                    metadata = read_json(source_root / "metadata.json", {})
                     _, result.tag = commit_pack(
                         self.root,
                         family=family,
@@ -149,7 +152,9 @@ class Archiver:
                         version=resource.version,
                         sha256=result.sha256 or "",
                         paths=[
-                            self.root / "families" / family / resource_kind(resource.type),
+                            source_root,
+                            self.root / "profiles" / kind,
+                            self.root / "timeline" / f"{kind}.json",
                             self.catalog_path,
                             self.state_path,
                             self.inventory_path,
@@ -174,20 +179,21 @@ class Archiver:
         do_commit: bool | None = None,
     ) -> CaptureResult:
         kind = resource_kind(resource.type)
-        family_root = self.root / "families" / family / kind
+        validate_profile_cdn_url(resource.url, expected_version=resource.version, expected_kind=kind)
         records = read_observations(self.catalog_path)
         with tempfile.TemporaryDirectory(prefix="bambu-ota-capture-") as raw_temp:
             download = self.client.download(resource.url, Path(raw_temp))
             repack = is_same_version_repack(
                 records, family, resource.type, resource.version, resource.url, download.sha256
             )
-            contents = family_root / "contents"
-            validation = extract_zip_safely(download.path, contents, resource.version)
-            family_root.mkdir(parents=True, exist_ok=True)
-            archive_path = family_root / "archive.zip"
-            archive_temp = family_root / ".archive.zip.tmp"
+            source_root = self.ota_source_root(family, kind, resource.version, download.sha256)
+            source_root.mkdir(parents=True, exist_ok=True)
+            archive_path = source_root / "archive.zip"
+            archive_temp = source_root / ".archive.zip.tmp"
             shutil.copyfile(download.path, archive_temp)
             archive_temp.replace(archive_path)
+            profile_root = self.root / "profiles" / kind
+            validation = extract_zip_safely(download.path, profile_root, resource.version)
             retrieved_at = now_iso()
             header_publication, header_status = publication_from_headers(download.headers)
             effective_publication = publication_time or header_publication
@@ -211,10 +217,12 @@ class Archiver:
                 publication_time=effective_publication,
                 publication_time_status=publication_status,
                 directly_verified=True,
+                provenance_chain=list(dict.fromkeys([provenance, "retrieved-cdn"])),
                 same_version_repack=repack,
                 uncertainty=uncertainty or [],
             )
             metadata = observation.to_dict() | {
+                "source_path": str(source_root.relative_to(self.root)),
                 "validation": {
                     "file_count": validation.file_count,
                     "expanded_size": validation.expanded_size,
@@ -222,10 +230,11 @@ class Archiver:
                     "bbl_version": validation.bbl_version,
                 }
             }
-            metadata_path = family_root / "metadata.json"
-            write_json_atomic(metadata_path, metadata)
-            if not append_observation(self.catalog_path, observation):
-                raise RuntimeError("changed tuple produced a duplicate catalog observation")
+            write_json_atomic(source_root / "metadata.json", metadata)
+            write_json_atomic(self.root / "timeline" / f"{kind}.json", metadata)
+            # Description/force changes can require a fresh verified download while the
+            # catalog identity (family/type/version/URL/SHA-256) remains the same.
+            append_observation(self.catalog_path, observation)
             tag = None
             should_commit = self.commit if do_commit is None else do_commit
             if should_commit:
@@ -235,7 +244,12 @@ class Archiver:
                     resource_kind=kind,
                     version=resource.version,
                     sha256=download.sha256,
-                    paths=[family_root, self.catalog_path],
+                    paths=[
+                        source_root,
+                        profile_root,
+                        self.root / "timeline" / f"{kind}.json",
+                        self.catalog_path,
+                    ],
                     repack=repack,
                     commit_date=effective_publication,
                 )
@@ -262,6 +276,7 @@ class Archiver:
             publication_time=record.get("publication_time"),
             publication_time_status=record.get("publication_time_status", "unknown"),
             directly_verified=False,
+            provenance_chain=["metadata-only"],
             uncertainty=record.get("uncertainty", ["archive bytes were not available"]),
         )
         return append_observation(self.catalog_path, observation)

@@ -28,7 +28,9 @@ jobs:
           python-version: "3.12"
 
       - name: Test archive safety and polling behavior
-        run: python -m unittest discover -s tests -v
+        run: |
+          python -m unittest discover -s tests -v
+          python -m bambu_ota_archive.cli audit
         env:
           PYTHONPATH: src
 
@@ -50,4 +52,3 @@ jobs:
           fi
           git push origin "HEAD:${GITHUB_REF_NAME}" --follow-tags
           echo "Captured and pushed new global OTA profile pack commits." >> "$GITHUB_STEP_SUMMARY"
-

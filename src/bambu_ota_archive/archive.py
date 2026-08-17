@@ -4,6 +4,7 @@ import json
 import os
 import shutil
 import stat
+import struct
 import tempfile
 import zipfile
 from dataclasses import dataclass
@@ -22,6 +23,41 @@ class ArchiveValidation:
     expanded_size: int
     bbl_json_path: str
     bbl_version: str
+
+
+def _reject_raw_nul_names(archive: Path) -> None:
+    """Inspect raw central-directory names because zipfile truncates names at NUL."""
+    with archive.open("rb") as stream:
+        stream.seek(0, os.SEEK_END)
+        size = stream.tell()
+        tail_size = min(size, 65_557)
+        stream.seek(size - tail_size)
+        tail = stream.read(tail_size)
+        eocd_at = tail.rfind(b"PK\x05\x06")
+        if eocd_at < 0 or len(tail) - eocd_at < 22:
+            raise UnsafeArchive("invalid, corrupt, or truncated ZIP archive")
+        eocd = struct.unpack_from("<4s4H2LH", tail, eocd_at)
+        central_size, central_offset = eocd[5], eocd[6]
+        if central_size == 0xFFFFFFFF or central_offset == 0xFFFFFFFF:
+            raise UnsafeArchive("ZIP64 central directory is unsupported by the safety scanner")
+        if central_offset + central_size > size:
+            raise UnsafeArchive("invalid central-directory bounds")
+        stream.seek(central_offset)
+        central = stream.read(central_size)
+    cursor = 0
+    while cursor < len(central):
+        if len(central) - cursor < 46 or central[cursor : cursor + 4] != b"PK\x01\x02":
+            raise UnsafeArchive("invalid central-directory entry")
+        fields = struct.unpack_from("<4s6H3L5H2L", central, cursor)
+        name_length, extra_length, comment_length = fields[10], fields[11], fields[12]
+        name_start = cursor + 46
+        name_end = name_start + name_length
+        entry_end = name_end + extra_length + comment_length
+        if entry_end > len(central):
+            raise UnsafeArchive("truncated central-directory entry")
+        if b"\x00" in central[name_start:name_end]:
+            raise UnsafeArchive("NUL character in member path")
+        cursor = entry_end
 
 
 def _validated_name(raw_name: str) -> PurePosixPath:
@@ -48,6 +84,7 @@ def validate_zip(
     max_compression_ratio: float = MAX_COMPRESSION_RATIO,
 ) -> ArchiveValidation:
     try:
+        _reject_raw_nul_names(archive)
         with zipfile.ZipFile(archive) as zf:
             members = zf.infolist()
             if len(members) > max_files:
@@ -119,13 +156,20 @@ def extract_zip_safely(archive: Path, destination: Path, expected_version: str) 
         old = destination.with_name(f".{destination.name}.old-{os.getpid()}")
         if old.exists():
             shutil.rmtree(old)
-        if destination.exists():
-            destination.replace(old)
-        temp.replace(destination)
-        if old.exists():
-            shutil.rmtree(old)
+        moved_old = False
+        try:
+            if destination.exists():
+                destination.replace(old)
+                moved_old = True
+            temp.replace(destination)
+        except Exception:
+            if moved_old and old.exists() and not destination.exists():
+                old.replace(destination)
+            raise
+        else:
+            if old.exists():
+                shutil.rmtree(old)
         return validation
     except Exception:
         shutil.rmtree(temp, ignore_errors=True)
         raise
-

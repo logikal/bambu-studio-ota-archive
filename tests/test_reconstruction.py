@@ -41,16 +41,18 @@ class ReconstructionTests(unittest.TestCase):
             destination = import_git_reconstruction(
                 archive, source, "HEAD", "https://github.com/bambulab/BambuStudio/commit/example"
             )
-            self.assertTrue(str(destination.relative_to(archive)).startswith("reconstructions/git/"))
-            self.assertFalse((archive / "families").exists())
+            self.assertTrue(str(destination.relative_to(archive)).startswith("sources/git/"))
+            self.assertTrue((archive / "profiles/settings/BBL/machine/test.json").is_file())
+            self.assertFalse((archive / "sources/ota").exists())
             metadata = json.loads((destination / "metadata.json").read_text())
             self.assertEqual(metadata["provenance"], "reconstructed-git")
             self.assertFalse(metadata["directly_verified"])
             self.assertIsNone(metadata["cdn_url"])
             self.assertTrue(metadata["source_commit"])
             self.assertTrue(metadata["source_tree"])
+            self.assertTrue(metadata["source_bbl_json_blob"])
+            self.assertEqual(metadata["source_revision"], "HEAD")
 
 
 if __name__ == "__main__":
     unittest.main()
-

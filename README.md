@@ -1,24 +1,40 @@
 # Bambu Studio profile history
 
-This repository is a file-level history of Bambu Lab's global Bambu Studio profile/settings
-packs. Every known state is applied to the same `profiles/settings` path in chronological order,
-so ordinary Git diffs show what Bambu added, removed, or changed between states.
+## What
 
-The timeline combines two explicitly labeled evidence classes, in the order they were released:
+This repository keeps a chronological history of Bambu Studio's built-in printer, filament, and
+process profiles. Every captured version is stored at the same `profiles/settings` path, so a
+normal Git diff shows exactly what Bambu added, removed, or changed.
 
-- `observed-api`: an exact ZIP returned by Bambu Lab's global OTA API, downloaded and validated.
-- `reconstructed-git`: a profile tree reconstructed from an official public BambuStudio Git
-  revision. It extends the useful timeline but is not evidence that the same bytes were released
-  as an OTA pack.
+## Why
 
-Interleaving makes the files diffable; it does not erase or upgrade provenance. This archive is
-also not historically complete: the API exposes only the pack currently offered to each
-compatibility family, so older replacements may already be unavailable or may be missed between
-polls.
+Bambu changes profiles in two ways:
 
-The hourly automation watches both sides of that sequence. A new official Bambu Studio tag adds
-the profiles bundled with that Studio release. A profile-only OTA published before or after it
-adds another state at the appropriate point in the same timeline.
+1. A new Bambu Studio release includes a set of profiles.
+2. Bambu can update those profiles over the air without releasing a new version of Studio.
+
+The next Studio release usually includes the OTA fixes plus additional changes. To show the real
+sequence, this repository interleaves both sources in one timeline:
+
+```text
+Studio release → OTA update → OTA update → Studio release → OTA update
+```
+
+## How
+
+An hourly GitHub Actions job checks both the official BambuStudio release tags and Bambu's global
+profile-update API. When it finds a new state, it validates the files and appends one commit to the
+timeline. If nothing changed, it creates no commit.
+
+Each commit clearly identifies its source:
+
+- `observed-api` means the exact OTA ZIP was downloaded from Bambu and validated.
+- `reconstructed-git` means the profiles came from an official BambuStudio release tag. This is
+  useful release evidence, but it does not claim those exact bytes were also distributed by OTA.
+
+The archive cannot guarantee a complete history from before monitoring began. It can also miss an
+OTA pack if Bambu replaces it twice between successful hourly checks. Studio release tags do not
+normally have that one-hour miss window because they can be captured on a later run.
 
 ## Browse and diff the profile history
 
@@ -141,9 +157,9 @@ avoids empty commits.
 
 Each run refreshes a small cached, blob-filtered Git mirror containing the official BambuStudio
 tag metadata. Profile blobs are downloaded only for unseen release tags and are deliberately not
-added to the recurring cache. New Studio snapshots and OTA packs first
-seen in the same run are sorted by the Studio tag's release time and the CDN `Last-Modified` time
-before they are committed. Their metadata also records when this archive first observed them.
+added to the recurring cache. New Studio snapshots and OTA packs first seen in the same run are
+sorted by the Studio tag's release time and the CDN `Last-Modified` time before they are committed.
+Their metadata also records when this archive first observed them.
 
 GitHub schedules can be delayed. The effective miss window is the time between successful runs,
 nominally one hour. A pack replaced twice inside that window can disappear without being observed.

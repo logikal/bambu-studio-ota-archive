@@ -1,4 +1,4 @@
-name: Capture Bambu Studio global OTA profiles
+name: Capture Bambu Studio profile history
 
 on:
   schedule:

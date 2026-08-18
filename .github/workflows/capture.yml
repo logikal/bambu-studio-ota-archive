@@ -22,15 +22,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with:
-          python-version: "3.12"
-
       - name: Test archive safety and polling behavior
         run: |
-          python -m unittest discover -s tests -v
-          python -m bambu_ota_archive.cli audit
+          python3 -c 'import sys; assert sys.version_info >= (3, 11), sys.version'
+          python3 -m unittest discover -s tests -v
+          python3 -m bambu_ota_archive.cli audit
         env:
           PYTHONPATH: src
 
@@ -41,7 +37,7 @@ jobs:
           git config user.email "bambu-ota-archive[bot]@users.noreply.github.com"
           git config commit.gpgsign false
           git config tag.gpgsign false
-          PYTHONPATH=src python -m bambu_ota_archive.cli poll --commit
+          PYTHONPATH=src python3 -m bambu_ota_archive.cli poll --commit
 
       - name: Push commits and annotated tags when present
         run: |

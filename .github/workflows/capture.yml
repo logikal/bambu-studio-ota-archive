@@ -16,8 +16,6 @@ jobs:
   capture:
     runs-on: ubuntu-latest
     timeout-minutes: 45
-    env:
-      UPSTREAM_GIT_DIR: ${{ runner.temp }}/BambuStudio.git
     steps:
       - name: Check out complete archive history
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -36,17 +34,18 @@ jobs:
         id: upstream-cache
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
-          path: ${{ env.UPSTREAM_GIT_DIR }}
+          path: ${{ runner.temp }}/BambuStudio.git
           key: bambustudio-tag-metadata-v1
 
       - name: Fetch official BambuStudio release tags
         run: |
           set -euo pipefail
-          if [ ! -d "$UPSTREAM_GIT_DIR" ]; then
-            git init --bare --initial-branch=main "$UPSTREAM_GIT_DIR"
-            git --git-dir="$UPSTREAM_GIT_DIR" remote add origin https://github.com/bambulab/BambuStudio.git
+          upstream_git_dir="$RUNNER_TEMP/BambuStudio.git"
+          if [ ! -d "$upstream_git_dir" ]; then
+            git init --bare --initial-branch=main "$upstream_git_dir"
+            git --git-dir="$upstream_git_dir" remote add origin https://github.com/bambulab/BambuStudio.git
           fi
-          git --git-dir="$UPSTREAM_GIT_DIR" fetch \
+          git --git-dir="$upstream_git_dir" fetch \
             --force --prune --filter=blob:none --depth=1 origin \
             '+refs/tags/*:refs/tags/*'
 
@@ -54,7 +53,7 @@ jobs:
         if: steps.upstream-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
-          path: ${{ env.UPSTREAM_GIT_DIR }}
+          path: ${{ runner.temp }}/BambuStudio.git
           key: bambustudio-tag-metadata-v1
 
       - name: Capture Studio releases and changed global OTA profile packs
@@ -64,8 +63,9 @@ jobs:
           git config user.email "bambu-ota-archive[bot]@users.noreply.github.com"
           git config commit.gpgsign false
           git config tag.gpgsign false
+          upstream_git_dir="$RUNNER_TEMP/BambuStudio.git"
           PYTHONPATH=src python3 -m bambu_ota_archive.cli sync \
-            --source-repo "$UPSTREAM_GIT_DIR" --commit
+            --source-repo "$upstream_git_dir" --commit
 
       - name: Push commits and annotated tags when present
         run: |

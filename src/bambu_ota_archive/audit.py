@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -67,6 +68,7 @@ def audit_repository(root: Path) -> dict[str, int]:
         verified += 1
 
     reconstructions = 0
+    reconstruction_by_revision: dict[str, Path] = {}
     for metadata_path in sorted((root / "sources" / "git").glob("*/metadata.json")):
         metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
         if metadata.get("source_path") != str(metadata_path.parent.relative_to(root)):
@@ -79,7 +81,47 @@ def audit_repository(root: Path) -> dict[str, int]:
             raise ValueError(f"invalid Git reconstruction classification: {metadata_path}")
         if not metadata.get("source_commit") or not metadata.get("source_tree"):
             raise ValueError(f"incomplete Git reconstruction identity: {metadata_path}")
+        revision = metadata.get("source_revision")
+        if not isinstance(revision, str) or revision in reconstruction_by_revision:
+            raise ValueError(f"invalid or duplicate Git source revision: {metadata_path}")
+        reconstruction_by_revision[revision] = metadata_path
         reconstructions += 1
+
+    tracked_studio_tags = 0
+    release_state_path = root / "state" / "studio-releases.json"
+    if release_state_path.exists():
+        release_state = json.loads(release_state_path.read_text(encoding="utf-8"))
+        if release_state.get("source") != "https://github.com/bambulab/BambuStudio":
+            raise ValueError("Studio release tracker has an unexpected source")
+        tags = release_state.get("tags")
+        if not isinstance(tags, dict):
+            raise ValueError("Studio release tracker has no tags object")
+        for revision, record in tags.items():
+            if not re.fullmatch(r"[vV]\d{2}\.\d{2}\.\d{2}\.\d{2}", revision):
+                raise ValueError(f"invalid tracked Studio tag: {revision}")
+            if not isinstance(record, dict) or not re.fullmatch(
+                r"[0-9a-f]{40}", str(record.get("source_commit", ""))
+            ):
+                raise ValueError(f"invalid tracked Studio commit: {revision}")
+            status = record.get("status")
+            if status not in {"baseline-before-automation", "captured", "equivalent-existing-source"}:
+                raise ValueError(f"invalid tracked Studio status: {revision}")
+            if status in {"captured", "equivalent-existing-source"}:
+                source_path = record.get("source_path")
+                if not isinstance(source_path, str):
+                    raise ValueError(f"tracked Studio capture is missing its source record: {revision}")
+                metadata_path = root / source_path / "metadata.json"
+                if not metadata_path.is_file():
+                    raise ValueError(f"tracked Studio capture is missing its source record: {revision}")
+                metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+                if metadata.get("source_commit") != record.get("source_commit"):
+                    raise ValueError(f"tracked Studio commit mismatch: {revision}")
+                if status == "captured" and reconstruction_by_revision.get(revision) != metadata_path:
+                    raise ValueError(f"tracked Studio revision mismatch: {revision}")
+            tracked_studio_tags += 1
+        missing = sorted(set(reconstruction_by_revision) - set(tags))
+        if missing:
+            raise ValueError(f"Git reconstructions absent from Studio release tracker: {', '.join(missing)}")
 
     for timeline_path in sorted((root / "timeline").glob("*.json")):
         metadata = json.loads(timeline_path.read_text(encoding="utf-8"))
@@ -91,4 +133,9 @@ def audit_repository(root: Path) -> dict[str, int]:
         if not isinstance(source_path, str) or not (root / source_path / "metadata.json").is_file():
             raise ValueError(f"timeline source is missing: {timeline_path}")
 
-    return {"observations": len(observations), "verified_archives": verified, "git_reconstructions": reconstructions}
+    return {
+        "observations": len(observations),
+        "verified_archives": verified,
+        "git_reconstructions": reconstructions,
+        "tracked_studio_tags": tracked_studio_tags,
+    }

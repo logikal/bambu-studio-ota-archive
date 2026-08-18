@@ -70,3 +70,14 @@ def commit_metadata_only(root: Path, catalog: Path, version: str, commit_date: s
         env = {"GIT_AUTHOR_DATE": commit_date, "GIT_COMMITTER_DATE": commit_date}
     _git(root, "commit", "--no-gpg-sign", "-m", f"catalog: record unavailable OTA {version}", env=env)
     return _git(root, "rev-parse", "HEAD")
+
+
+def commit_state_update(root: Path, *, paths: list[Path], message: str) -> str | None:
+    existing = [path for path in paths if path.exists()]
+    if not existing:
+        return None
+    _git(root, "add", "--", *(str(path.relative_to(root)) for path in existing))
+    if not _git(root, "diff", "--cached", "--name-only"):
+        return None
+    _git(root, "commit", "--no-gpg-sign", "-m", message)
+    return _git(root, "rev-parse", "HEAD")

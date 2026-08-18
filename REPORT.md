@@ -72,6 +72,12 @@ time—have source records under `sources/git` and profile trees in their tagged
 Each records its exact source commit, BBL subtree, and `BBL.json` blob. None has a CDN URL or OTA
 tag, and none is treated as published OTA proof.
 
+The initial reconstruction intentionally remains bounded to those nine representative states.
+`state/studio-releases.json` records all 33 official Studio 2.x tags that existed when continuous
+automation began, distinguishing the nine captured snapshots from older baseline-only tags. Every
+official Studio 2.x tag first observed after that baseline is now captured automatically and
+interleaved with OTA states; published history is not rewritten to backfill the other old tags.
+
 | Studio tag | BBL.json version | Source commit |
 |---|---|---|
 | V02.00.03.54 | 02.00.00.87 | `c9f4cbc94be325dfda6ab694ddec2cfffe482284` |
@@ -91,15 +97,20 @@ evidence.
 
 The pinned-SHA GitHub Actions workflow runs hourly at minute 17 and on manual dispatch. It has
 `contents: write` only, concurrency serialization, tests before capture, no empty commits, one
-commit per changed pack, and an annotated tag per distinct verified archive. Both action SHAs were
-verified against their official tags on 2026-08-17.
+commit per changed OTA pack or new Studio release snapshot, and an annotated provenance tag per
+timeline state. It maintains a small cached blob-filtered mirror of official BambuStudio tag
+metadata, fetches profile blobs only for unseen releases, and keeps those large blobs out of the
+recurring cache. The checkout and cache action SHAs were verified against
+their official tags on 2026-08-17.
 
-The local suite contains **38 tests** covering the stable diffable tree, latest-only behavior, empty
-responses, versions and repacks, new/old families, history imports, metadata-only records, Git separation, idempotence, log
-redaction, and every enumerated unsafe ZIP case. The live run validated 7 archives containing
+The local suite contains **41 tests** covering the stable diffable tree, latest-only behavior, empty
+responses, versions and repacks, new/old families, history imports, metadata-only records, Git
+separation, release/OTA ordering in both directions, combined-sync idempotence, log redaction, and
+every enumerated unsafe ZIP case. The live run validated 7 archives containing
 11,070 ZIP entries in total. The repository audit independently rehashed and revalidated all 7
-stored archives, confirmed 7 unique catalog observations, and checked all 9 reconstruction
-classifications plus the checked-out timeline/source linkage.
+stored archives, confirmed 7 unique catalog observations, checked all 9 reconstruction
+classifications, validated the 33-tag Studio release ledger, and checked the checked-out
+timeline/source linkage.
 
 The nominal polling interval leaves a one-hour miss window; GitHub schedule delays or failed runs
 make the effective window longer. Since the API exposes only the pack currently offered to each

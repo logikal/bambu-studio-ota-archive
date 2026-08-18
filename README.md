@@ -4,7 +4,7 @@ This repository is a file-level history of Bambu Lab's global Bambu Studio profi
 packs. Every known state is applied to the same `profiles/settings` path in chronological order,
 so ordinary Git diffs show what Bambu added, removed, or changed between states.
 
-The timeline combines two explicitly labeled evidence classes:
+The timeline combines two explicitly labeled evidence classes, in the order they were released:
 
 - `observed-api`: an exact ZIP returned by Bambu Lab's global OTA API, downloaded and validated.
 - `reconstructed-git`: a profile tree reconstructed from an official public BambuStudio Git
@@ -15,6 +15,10 @@ Interleaving makes the files diffable; it does not erase or upgrade provenance. 
 also not historically complete: the API exposes only the pack currently offered to each
 compatibility family, so older replacements may already be unavailable or may be missed between
 polls.
+
+The hourly automation watches both sides of that sequence. A new official Bambu Studio tag adds
+the profiles bundled with that Studio release. A profile-only OTA published before or after it
+adds another state at the appropriate point in the same timeline.
 
 ## Browse and diff the profile history
 
@@ -55,6 +59,7 @@ sources/ota/<family>/settings/<version>-<sha>/metadata.json
 sources/git/<version>-<commit>/metadata.json               Git reconstruction evidence
 catalog/observations.jsonl                                 append-only OTA observations
 catalog/current-inventory.json                             latest global API response
+state/studio-releases.json                                 official Studio tags already handled
 ```
 
 Source records accumulate and are never substituted for one another. The extracted profile tree
@@ -85,9 +90,11 @@ observation, commit, and OTA tag marked `same_version_repack`.
 - Download allowlist: exact HTTPS `.../upgrade/studio/{settings|printer}/BBL/.../<version>.zip`
   paths on `public-cdn.bblmw.com`; query strings, cross-host redirects, and type/version path
   mismatches are rejected.
-- Family discovery: official `bambulab/BambuStudio` tags matching uppercase or lowercase
-  `VMM.mm.pp.bb`, with major version 2 or later.
-- Query: every known family's `MM.mm.00.00` baseline on every run.
+- Studio releases: every newly observed official `bambulab/BambuStudio` tag matching uppercase or
+  lowercase `VMM.mm.pp.bb`, with major version 2 or later, contributes its bundled
+  `resources/profiles/BBL` snapshot.
+- OTA discovery: every known Studio major/minor line is queried at its `MM.mm.00.00` baseline on
+  every run, including old lines, so profile-only fixes do not depend on a new Studio release.
 - Traffic: one combined request per family per run, a transparent User-Agent, and low retry volume.
 - Published history is append-only. An unexpectedly late state is recorded with its true
   provenance and observation time; published commits are never reordered.
@@ -100,6 +107,8 @@ Python 3.11 or later is sufficient; the archiver has no runtime dependencies.
 PYTHONPATH=src python -m unittest discover -s tests -v
 PYTHONPATH=src python -m bambu_ota_archive.cli audit
 PYTHONPATH=src python -m bambu_ota_archive.cli poll --commit
+PYTHONPATH=src python -m bambu_ota_archive.cli sync \
+  --source-repo /path/to/BambuStudio.git --commit
 ```
 
 Committing mode requires a clean Git tree and explicitly disables commit and tag signing.
@@ -127,7 +136,16 @@ and relative paths without reformatting JSON.
 
 The workflow runs at minute 17 of every hour and supports manual dispatch. It tests and audits
 first, uses least-privilege `contents: write`, pins actions by full commit SHA, serializes captures,
-makes one timeline commit per changed pack, creates annotated tags, and avoids empty commits.
+makes one timeline commit per new Studio snapshot or changed OTA pack, creates annotated tags, and
+avoids empty commits.
+
+Each run refreshes a small cached, blob-filtered Git mirror containing the official BambuStudio
+tag metadata. Profile blobs are downloaded only for unseen release tags and are deliberately not
+added to the recurring cache. New Studio snapshots and OTA packs first
+seen in the same run are sorted by the Studio tag's release time and the CDN `Last-Modified` time
+before they are committed. Their metadata also records when this archive first observed them.
 
 GitHub schedules can be delayed. The effective miss window is the time between successful runs,
 nominally one hour. A pack replaced twice inside that window can disappear without being observed.
+Official Git tags remain discoverable on later runs, so this miss window applies to replaceable OTA
+offers, not ordinarily to Studio release snapshots.

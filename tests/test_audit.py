@@ -12,7 +12,12 @@ class AuditTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as raw:
             self.assertEqual(
                 audit_repository(Path(raw)),
-                {"observations": 0, "verified_archives": 0, "git_reconstructions": 0},
+                {
+                    "observations": 0,
+                    "verified_archives": 0,
+                    "git_reconstructions": 0,
+                    "tracked_studio_tags": 0,
+                },
             )
 
 

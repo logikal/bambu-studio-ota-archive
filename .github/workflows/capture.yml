@@ -16,6 +16,8 @@ jobs:
   capture:
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    env:
+      UPSTREAM_GIT_DIR: ${{ runner.temp }}/BambuStudio.git
     steps:
       - name: Check out complete archive history
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -30,21 +32,47 @@ jobs:
         env:
           PYTHONPATH: src
 
-      - name: Capture changed global profile packs
+      - name: Restore partial BambuStudio Git mirror
+        id: upstream-cache
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: ${{ env.UPSTREAM_GIT_DIR }}
+          key: bambustudio-tag-metadata-v1
+
+      - name: Fetch official BambuStudio release tags
+        run: |
+          set -euo pipefail
+          if [ ! -d "$UPSTREAM_GIT_DIR" ]; then
+            git init --bare --initial-branch=main "$UPSTREAM_GIT_DIR"
+            git --git-dir="$UPSTREAM_GIT_DIR" remote add origin https://github.com/bambulab/BambuStudio.git
+          fi
+          git --git-dir="$UPSTREAM_GIT_DIR" fetch \
+            --force --prune --filter=blob:none --depth=1 origin \
+            '+refs/tags/*:refs/tags/*'
+
+      - name: Save tag metadata mirror on initial cache miss
+        if: steps.upstream-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: ${{ env.UPSTREAM_GIT_DIR }}
+          key: bambustudio-tag-metadata-v1
+
+      - name: Capture Studio releases and changed global OTA profile packs
         run: |
           set -euo pipefail
           git config user.name "bambu-ota-archive[bot]"
           git config user.email "bambu-ota-archive[bot]@users.noreply.github.com"
           git config commit.gpgsign false
           git config tag.gpgsign false
-          PYTHONPATH=src python3 -m bambu_ota_archive.cli poll --commit
+          PYTHONPATH=src python3 -m bambu_ota_archive.cli sync \
+            --source-repo "$UPSTREAM_GIT_DIR" --commit
 
       - name: Push commits and annotated tags when present
         run: |
           set -euo pipefail
           if git diff --quiet "origin/${GITHUB_REF_NAME}..HEAD"; then
-            echo "No new pack commits." >> "$GITHUB_STEP_SUMMARY"
+            echo "No new Studio profile snapshots or OTA pack commits." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
           git push origin "HEAD:${GITHUB_REF_NAME}" --follow-tags
-          echo "Captured and pushed new global OTA profile pack commits." >> "$GITHUB_STEP_SUMMARY"
+          echo "Captured and pushed new Studio profile snapshots and/or global OTA packs." >> "$GITHUB_STEP_SUMMARY"

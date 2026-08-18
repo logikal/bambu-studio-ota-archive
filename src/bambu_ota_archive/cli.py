@@ -11,6 +11,7 @@ from .evidence import extract_log_file, resource_from_evidence
 from .gitops import commit_metadata_only, ensure_clean
 from .http import HttpClient
 from .reconstruction import commit_reconstruction, import_git_reconstruction
+from .sync import sync_timeline
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -23,6 +24,14 @@ def build_parser() -> argparse.ArgumentParser:
     poll.add_argument("--commit", action="store_true", help="commit and tag every changed verified pack")
     poll.add_argument("--family", action="append", dest="families")
     poll.add_argument("--pause", type=float, default=0.2)
+
+    sync = subparsers.add_parser(
+        "sync",
+        help="interleave new official Studio release profiles and global OTA packs",
+    )
+    sync.add_argument("--source-repo", type=Path, required=True)
+    sync.add_argument("--commit", action="store_true")
+    sync.add_argument("--pause", type=float, default=0.2)
 
     extract = subparsers.add_parser("extract-log", help="extract only redacted OTA metadata from a Studio log")
     extract.add_argument("source", type=Path)
@@ -62,6 +71,16 @@ def main(argv: list[str] | None = None) -> int:
         print(destination)
         return 0
     client = HttpClient(**({"user_agent": args.user_agent} if args.user_agent else {}))
+    if args.command == "sync":
+        result = sync_timeline(
+            args.root,
+            args.source_repo,
+            client,
+            commit=args.commit,
+            pause=args.pause,
+        )
+        print(json.dumps(result.to_dict(), indent=2))
+        return 0
     if args.command == "poll":
         archiver = Archiver(args.root, client, commit=args.commit, pause=args.pause)
         results = archiver.poll(families=args.families)

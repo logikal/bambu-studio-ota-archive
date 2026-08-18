@@ -57,6 +57,24 @@ class CaptureResult:
     tag: str | None = None
 
 
+@dataclass(frozen=True, slots=True)
+class PollOffer:
+    family: str
+    resource: Resource
+    query_url: str
+
+
+@dataclass(slots=True)
+class PollPlan:
+    generated_at: str
+    official_families: list[str]
+    inventory: dict[str, Any]
+    state: dict[str, Any]
+    offers: list[PollOffer]
+    changed_offers: list[PollOffer]
+    first_live_run: bool
+
+
 @contextmanager
 def repository_lock(root: Path) -> Iterator[None]:
     path = root / "state" / "run.lock"
@@ -84,86 +102,121 @@ class Archiver:
     def ota_source_root(self, family: str, kind: str, version: str, sha256: str) -> Path:
         return self.root / "sources" / "ota" / family / kind / f"{version}-{sha256[:12]}"
 
+    def plan_poll(
+        self,
+        *,
+        families: list[str] | None = None,
+        official_families: list[str] | None = None,
+    ) -> PollPlan:
+        official = (
+            discover_official_families(self.client, pause=self.pause)
+            if official_families is None
+            else official_families
+        )
+        selected = official if families is None else families
+        unknown = sorted(set(selected) - set(official))
+        if unknown:
+            raise ValueError(f"refusing unpublished families: {', '.join(unknown)}")
+        state = read_json(self.state_path, {})
+        generated_at = now_iso()
+        inventory: dict[str, Any] = {
+            "generated_at": generated_at,
+            "source": "global-api",
+            "official_families": official,
+            "families": {},
+        }
+        offers: list[PollOffer] = []
+        for index, family in enumerate(selected):
+            resources, query_url = query_family(self.client, family)
+            inventory["families"][family] = {
+                "api_query_version": baseline_for_family(family),
+                "query_url": query_url,
+                "resources": [resource.to_dict() for resource in resources],
+            }
+            offers.extend(PollOffer(family, resource, query_url) for resource in resources)
+            if index + 1 < len(selected):
+                polite_pause(self.pause)
+        changed_offers = [
+            offer
+            for offer in offers
+            if state.get(f"{offer.family}|{offer.resource.type}", {}).get("tuple")
+            != list(offer.resource.comparison_tuple())
+        ]
+        return PollPlan(
+            generated_at,
+            official,
+            inventory,
+            state,
+            offers,
+            changed_offers,
+            not self.inventory_path.exists(),
+        )
+
+    def persist_poll_plan(self, plan: PollPlan) -> None:
+        previous = read_json(self.inventory_path, {})
+        comparable_previous = {key: value for key, value in previous.items() if key != "generated_at"}
+        comparable_current = {key: value for key, value in plan.inventory.items() if key != "generated_at"}
+        if comparable_previous != comparable_current:
+            write_json_atomic(self.inventory_path, plan.inventory)
+        if plan.first_live_run and self.seed_path.exists():
+            write_json_atomic(
+                self.seed_report_path,
+                compare_seed_inventory(read_json(self.seed_path, {}), plan.inventory),
+            )
+
+    def capture_offer(self, plan: PollPlan, offer: PollOffer) -> CaptureResult:
+        resource = offer.resource
+        result = self.capture_resource(
+            offer.family,
+            resource,
+            provenance="observed-api",
+            evidence=offer.query_url,
+            observed_at=plan.generated_at,
+            do_commit=False,
+        )
+        key = f"{offer.family}|{resource.type}"
+        plan.state[key] = {
+            "tuple": list(resource.comparison_tuple()),
+            "observed_at": plan.generated_at,
+        }
+        write_json_atomic(self.state_path, plan.state)
+        if self.commit:
+            kind = resource_kind(resource.type)
+            source_root = self.ota_source_root(offer.family, kind, resource.version, result.sha256 or "")
+            metadata = read_json(source_root / "metadata.json", {})
+            _, result.tag = commit_pack(
+                self.root,
+                family=offer.family,
+                resource_kind=kind,
+                version=resource.version,
+                sha256=result.sha256 or "",
+                paths=[
+                    source_root,
+                    self.root / "profiles" / kind,
+                    self.root / "timeline" / f"{kind}.json",
+                    self.catalog_path,
+                    self.state_path,
+                    self.inventory_path,
+                    self.seed_report_path,
+                ],
+                repack=metadata.get("same_version_repack") is True,
+                commit_date=metadata.get("publication_time"),
+            )
+        return result
+
     def poll(self, *, families: list[str] | None = None) -> list[CaptureResult]:
         with repository_lock(self.root):
             if self.commit:
                 ensure_clean(self.root)
-            official = discover_official_families(self.client, pause=self.pause)
-            selected = official if families is None else families
-            unknown = sorted(set(selected) - set(official))
-            if unknown:
-                raise ValueError(f"refusing unpublished families: {', '.join(unknown)}")
-            state = read_json(self.state_path, {})
-            first_live_run = not self.inventory_path.exists()
-            inventory: dict[str, Any] = {
-                "generated_at": now_iso(),
-                "source": "global-api",
-                "official_families": official,
-                "families": {},
-            }
-            offered: list[tuple[str, Resource, str]] = []
+            plan = self.plan_poll(families=families)
+            self.persist_poll_plan(plan)
+            changed = set(plan.changed_offers)
             results: list[CaptureResult] = []
-            for index, family in enumerate(selected):
-                resources, query_url = query_family(self.client, family)
-                inventory["families"][family] = {
-                    "api_query_version": baseline_for_family(family),
-                    "query_url": query_url,
-                    "resources": [resource.to_dict() for resource in resources],
-                }
-                offered.extend((family, resource, query_url) for resource in resources)
-                if index + 1 < len(selected):
-                    polite_pause(self.pause)
-
-            changed_offers = [
-                (family, resource, query_url)
-                for family, resource, query_url in offered
-                if state.get(f"{family}|{resource.type}", {}).get("tuple")
-                != list(resource.comparison_tuple())
-            ]
-            if changed_offers or not self.inventory_path.exists():
-                write_json_atomic(self.inventory_path, inventory)
-            if first_live_run and self.seed_path.exists():
-                write_json_atomic(self.seed_report_path, compare_seed_inventory(read_json(self.seed_path, {}), inventory))
-
-            for family, resource, query_url in offered:
-                key = f"{family}|{resource.type}"
-                current_tuple = list(resource.comparison_tuple())
-                if state.get(key, {}).get("tuple") == current_tuple:
-                    results.append(CaptureResult(family, resource, False))
-                    continue
-                result = self.capture_resource(
-                    family,
-                    resource,
-                    provenance="observed-api",
-                    evidence=query_url,
-                    observed_at=inventory["generated_at"],
-                    do_commit=False,
-                )
-                state[key] = {"tuple": current_tuple, "observed_at": inventory["generated_at"]}
-                write_json_atomic(self.state_path, state)
-                if self.commit:
-                    kind = resource_kind(resource.type)
-                    source_root = self.ota_source_root(family, kind, resource.version, result.sha256 or "")
-                    metadata = read_json(source_root / "metadata.json", {})
-                    _, result.tag = commit_pack(
-                        self.root,
-                        family=family,
-                        resource_kind=resource_kind(resource.type),
-                        version=resource.version,
-                        sha256=result.sha256 or "",
-                        paths=[
-                            source_root,
-                            self.root / "profiles" / kind,
-                            self.root / "timeline" / f"{kind}.json",
-                            self.catalog_path,
-                            self.state_path,
-                            self.inventory_path,
-                            self.seed_report_path,
-                        ],
-                        repack=metadata.get("same_version_repack") is True,
-                        commit_date=metadata.get("publication_time"),
-                    )
-                results.append(result)
+            for offer in plan.offers:
+                if offer in changed:
+                    results.append(self.capture_offer(plan, offer))
+                else:
+                    results.append(CaptureResult(offer.family, offer.resource, False))
             return results
 
     def capture_resource(

@@ -49,6 +49,20 @@ class HttpClient:
         except urllib.error.HTTPError as exc:
             return exc.code, _selected_headers(exc.headers)
 
+    def head_profile(self, url: str) -> tuple[int, dict[str, str]]:
+        kind, version = validate_profile_cdn_url(url)
+        profile_opener = urllib.request.build_opener(_ProfileRedirectHandler(version, kind))
+        try:
+            with profile_opener.open(self._request(url, method="HEAD"), timeout=self.timeout) as response:
+                validate_profile_cdn_url(
+                    response.geturl(),
+                    expected_version=version,
+                    expected_kind=kind,
+                )
+                return response.status, _selected_headers(response.headers)
+        except urllib.error.HTTPError as exc:
+            return exc.code, _selected_headers(exc.headers)
+
     def download(self, url: str, destination_dir: Path, *, max_bytes: int = MAX_ARCHIVE_BYTES) -> Download:
         kind, version = validate_profile_cdn_url(url)
         profile_opener = urllib.request.build_opener(_ProfileRedirectHandler(version, kind))

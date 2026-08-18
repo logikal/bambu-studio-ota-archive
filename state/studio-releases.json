@@ -1,0 +1,148 @@
+{
+  "baseline_as_of": "2026-08-18T00:24:18Z",
+  "last_checked_at": "2026-08-18T00:24:18Z",
+  "source": "https://github.com/bambulab/BambuStudio",
+  "tags": {
+    "V02.00.03.54": {
+      "source_commit": "c9f4cbc94be325dfda6ab694ddec2cfffe482284",
+      "source_path": "sources/git/02.00.00.87-c9f4cbc94be3",
+      "status": "captured"
+    },
+    "v02.00.00.95": {
+      "source_commit": "35e4db07e99ca8df18bec2b7e924c1940307f8bd",
+      "status": "baseline-before-automation"
+    },
+    "v02.00.01.50": {
+      "source_commit": "0163f3859882c8684117d7ddc9b84e90746ca13f",
+      "status": "baseline-before-automation"
+    },
+    "v02.00.02.57": {
+      "source_commit": "904dc26c24da1df94a18bf51f08a7714c088eb83",
+      "status": "baseline-before-automation"
+    },
+    "v02.01.00.58": {
+      "source_commit": "9cf87d94e227ff7577501aed84ee83f1c0c4279d",
+      "status": "baseline-before-automation"
+    },
+    "v02.01.00.59": {
+      "source_commit": "a8afb6519e00bb25aa336bccb6516a10a716a589",
+      "status": "baseline-before-automation"
+    },
+    "v02.01.01.52": {
+      "source_commit": "456a87de5ee44ce67fbcda3f83dd1c31d199319c",
+      "source_path": "sources/git/02.01.00.18-456a87de5ee4",
+      "status": "captured"
+    },
+    "v02.02.00.60": {
+      "source_commit": "27a1a76f33b0121e128d8b244cbc75ee7bb26a6d",
+      "status": "baseline-before-automation"
+    },
+    "v02.02.00.68": {
+      "source_commit": "b4f69606fcf5fd0bbf700634fba0ebc1b5d90815",
+      "status": "baseline-before-automation"
+    },
+    "v02.02.00.85": {
+      "source_commit": "51abf4eaab4493441510979785dcf31c116c3647",
+      "status": "baseline-before-automation"
+    },
+    "v02.02.01.58": {
+      "source_commit": "31c43ea392df04d0e2d23312423b14feab33cc91",
+      "status": "baseline-before-automation"
+    },
+    "v02.02.01.60": {
+      "source_commit": "cac70d30c8c07984a9dd6e3e12abfd6801383826",
+      "status": "baseline-before-automation"
+    },
+    "v02.02.02.56": {
+      "source_commit": "4f0f0f3e97400629205048995c77b5eedd2768e5",
+      "source_path": "sources/git/02.02.00.04-4f0f0f3e9740",
+      "status": "captured"
+    },
+    "v02.03.00.70": {
+      "source_commit": "8f360010bb300bd1bc45fa76d1b8d1b055ba824d",
+      "status": "baseline-before-automation"
+    },
+    "v02.03.01.51": {
+      "source_commit": "1241f815dc784c748d75532c9fd722241d253fd2",
+      "source_path": "sources/git/02.03.00.04-1241f815dc78",
+      "status": "captured"
+    },
+    "v02.04.00.70": {
+      "source_commit": "b6bafe4eadf75c177a53837ba9bd10eb5be9d84f",
+      "source_path": "sources/git/02.04.00.01-b6bafe4eadf7",
+      "status": "captured"
+    },
+    "v02.05.00.64": {
+      "source_commit": "16d0c45a757dbdcae9ef7b896894362ca181f06c",
+      "status": "baseline-before-automation"
+    },
+    "v02.05.00.65": {
+      "source_commit": "b7f09922205489fa7ef8354f2cc7629a3537261c",
+      "status": "baseline-before-automation"
+    },
+    "v02.05.00.66": {
+      "source_commit": "b42ae2cbb69edb4c03786ea925e284d4ef44d62c",
+      "status": "baseline-before-automation"
+    },
+    "v02.05.00.67": {
+      "source_commit": "9c30cf25188793b6e37e64bf035bab7a0feff13a",
+      "status": "baseline-before-automation"
+    },
+    "v02.05.01.52": {
+      "source_commit": "55656f1e6f7be7ecf0588031131878baba8f4bf4",
+      "status": "baseline-before-automation"
+    },
+    "v02.05.01.58": {
+      "source_commit": "40d51e5f81286bf18064914021823e420efaca03",
+      "status": "baseline-before-automation"
+    },
+    "v02.05.02.51": {
+      "source_commit": "bf08f23c70311cae62e5d3226e8156d260d336bb",
+      "status": "baseline-before-automation"
+    },
+    "v02.05.03.61": {
+      "source_commit": "2678bb7fbbda1173175b4a828579ca7a40d88ae7",
+      "status": "baseline-before-automation"
+    },
+    "v02.05.03.62": {
+      "source_commit": "0829bc5f18bddc372db815f706384e7c4284bcb5",
+      "source_path": "sources/git/02.05.00.18-0829bc5f18bd",
+      "status": "captured"
+    },
+    "v02.06.00.51": {
+      "source_commit": "b506005bc4ee62124e24bf00e0f58656db3646a6",
+      "status": "baseline-before-automation"
+    },
+    "v02.06.01.55": {
+      "source_commit": "6eb52d6ac75e32ba2116239c1d756d913053f364",
+      "source_path": "sources/git/02.06.00.03-6eb52d6ac75e",
+      "status": "captured"
+    },
+    "v02.07.00.55": {
+      "source_commit": "4410c27fb15d57b29fbb1dbebc6edea11a091137",
+      "status": "baseline-before-automation"
+    },
+    "v02.07.01.57": {
+      "source_commit": "3f126b717ed1f10fee0f32f05ed9731808d0c8bb",
+      "status": "baseline-before-automation"
+    },
+    "v02.07.01.62": {
+      "source_commit": "42d319c6692fa8e64790fddf0cdaafd2a4254bcc",
+      "source_path": "sources/git/02.07.00.08-42d319c6692f",
+      "status": "captured"
+    },
+    "v02.08.00.50": {
+      "source_commit": "a78684a11de4abddad9a6d19eeb75a6a1d2e82a5",
+      "status": "baseline-before-automation"
+    },
+    "v02.08.01.55": {
+      "source_commit": "ba049f6a2e08c3b6033660bb84da80c08722974b",
+      "status": "baseline-before-automation"
+    },
+    "v02.08.02.60": {
+      "source_commit": "9a530f77c23d8c3430d1dbef02e103cd8bd6480e",
+      "source_path": "sources/git/02.08.00.04-9a530f77c23d",
+      "status": "captured"
+    }
+  }
+}

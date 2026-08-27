@@ -99,10 +99,18 @@
     "02.08": {
       "api_query_version": "02.08.00.00",
       "query_url": "https://api.bambulab.com/v1/iot-service/api/slicer/resource?slicer%2Fsettings%2Fbbl=02.08.00.00&slicer%2Fprinter%2Fbbl=02.08.00.00",
-      "resources": []
+      "resources": [
+        {
+          "description": "The updates for this preset package are as follows:\n1. Updated Machine start G-code and Machine end G-code for A2L Beta firmware version 01.01.00.38. Improved guidance for non-first-layer thermal preconditioning settings, making them easier to use.",
+          "force_update": false,
+          "type": "slicer/settings/bbl",
+          "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.08.00.06/9d40efa30a/02.08.00.06.zip",
+          "version": "02.08.00.06"
+        }
+      ]
     }
   },
-  "generated_at": "2026-08-17T20:51:23Z",
+  "generated_at": "2026-08-27T14:55:18Z",
   "official_families": [
     "02.00",
     "02.01",

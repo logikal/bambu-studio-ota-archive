@@ -68,5 +68,15 @@
       "1. Update the Machine start G-code for A1 and A1 mini to optimize the print heating logic for PLA materials on A-series printers.",
       false
     ]
+  },
+  "02.08|slicer/settings/bbl": {
+    "observed_at": "2026-08-27T14:55:18Z",
+    "tuple": [
+      "slicer/settings/bbl",
+      "02.08.00.06",
+      "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.08.00.06/9d40efa30a/02.08.00.06.zip",
+      "The updates for this preset package are as follows:\n1. Updated Machine start G-code and Machine end G-code for A2L Beta firmware version 01.01.00.38. Improved guidance for non-first-layer thermal preconditioning settings, making them easier to use.",
+      false
+    ]
   }
 }

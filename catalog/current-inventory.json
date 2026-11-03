@@ -108,9 +108,14 @@
           "version": "02.08.00.06"
         }
       ]
+    },
+    "02.09": {
+      "api_query_version": "02.09.00.00",
+      "query_url": "https://api.bambulab.com/v1/iot-service/api/slicer/resource?slicer%2Fsettings%2Fbbl=02.09.00.00&slicer%2Fprinter%2Fbbl=02.09.00.00",
+      "resources": []
     }
   },
-  "generated_at": "2026-08-27T14:55:18Z",
+  "generated_at": "2026-11-03T12:24:00Z",
   "official_families": [
     "02.00",
     "02.01",
@@ -120,7 +125,8 @@
     "02.05",
     "02.06",
     "02.07",
-    "02.08"
+    "02.08",
+    "02.09"
   ],
   "source": "global-api"
 }

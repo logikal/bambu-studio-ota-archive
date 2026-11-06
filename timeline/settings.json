@@ -1,22 +1,41 @@
 {
-  "cdn_url": null,
-  "directly_verified": false,
-  "evidence": "https://github.com/bambulab/BambuStudio/tree/v02.09.01.70",
-  "first_observed_at": "2026-11-03T12:24:00Z",
-  "pack_version": "02.09.00.74",
-  "provenance": "reconstructed-git",
+  "api_query_version": "02.09.00.00",
+  "archive_md5": "4d2427e010e5133eb8621181aafc35b8",
+  "archive_sha256": "e35089b3750e278ec7534586e764888637a93f7022a5605ac59ac74458f47614",
+  "archive_size": 2416719,
+  "cdn_headers": {
+    "content-length": "2416719",
+    "content-type": "binary/octet-stream",
+    "etag": "\"4d2427e010e5133eb8621181aafc35b8\"",
+    "last-modified": "Fri, 06 Nov 2026 07:44:59 GMT",
+    "x-amz-version-id": "znJWXS0gDMkkKTBAIoJWWmP4hX8SCSAb"
+  },
+  "cdn_url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.09.00.75/fed1d2ec22/02.09.00.75.zip",
+  "compatibility_family": "02.09",
+  "description": "The updates for this preset package are as follows:\n1. Updated filament parameters for E3D 0.4 & 0.6 hotends\n2. Fixed an issue that prevented certain filaments from printing properly on the Engineering Plate with X1, A1, and other printer series.\n3. Fixed an issue where the AUX1 side panel fan occasionally failed to turn off automatically at the end of a print if any parts had been skipped during printing.",
+  "directly_verified": true,
+  "evidence": "https://api.bambulab.com/v1/iot-service/api/slicer/resource?slicer%2Fsettings%2Fbbl=02.09.00.00&slicer%2Fprinter%2Fbbl=02.09.00.00",
+  "first_observed_at": "2026-11-06T09:20:01Z",
+  "force_update": false,
+  "pack_version": "02.09.00.75",
+  "provenance": "observed-api",
   "provenance_chain": [
-    "reconstructed-git"
+    "observed-api",
+    "retrieved-cdn"
   ],
-  "source_bbl_json_blob": "b75cffc5caa0ee074f7cbaccdd6306bbb862bfa8",
-  "source_commit": "56a57d00a591360cf41bf21383915ee5bf357be5",
-  "source_commit_time": "2026-11-03T19:47:19+08:00",
-  "source_path": "sources/git/02.09.00.74-56a57d00a591",
-  "source_release_time": "2026-11-03T20:09:55+08:00",
-  "source_revision": "v02.09.01.70",
-  "source_tree": "7ccf0b466ea106f238ad91424211a806771d08c9",
-  "uncertainty": [
-    "Public Git content is not proof that an OTA archive was published.",
-    "A live OTA archive may differ from this tree despite sharing the BBL.json version."
-  ]
+  "publication_time": "2026-11-06T07:44:59Z",
+  "publication_time_status": "estimated-from-cdn-last-modified",
+  "resource_type": "slicer/settings/bbl",
+  "retrieved_at": "2026-11-06T09:20:04Z",
+  "same_version_repack": false,
+  "source_commit": null,
+  "source_path": "sources/ota/02.09/settings/02.09.00.75-e35089b3750e",
+  "source_tree": null,
+  "uncertainty": [],
+  "validation": {
+    "bbl_json_path": "BBL.json",
+    "bbl_version": "02.09.00.75",
+    "expanded_size": 6844664,
+    "file_count": 2735
+  }
 }

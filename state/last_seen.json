@@ -80,12 +80,12 @@
     ]
   },
   "02.09|slicer/settings/bbl": {
-    "observed_at": "2026-11-06T09:20:01Z",
+    "observed_at": "2026-11-09T09:23:07Z",
     "tuple": [
       "slicer/settings/bbl",
-      "02.09.00.75",
-      "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.09.00.75/fed1d2ec22/02.09.00.75.zip",
-      "The updates for this preset package are as follows:\n1. Updated filament parameters for E3D 0.4 & 0.6 hotends\n2. Fixed an issue that prevented certain filaments from printing properly on the Engineering Plate with X1, A1, and other printer series.\n3. Fixed an issue where the AUX1 side panel fan occasionally failed to turn off automatically at the end of a print if any parts had been skipped during printing.",
+      "02.09.00.79",
+      "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.09.00.79/ed2f8b9cd0/02.09.00.79.zip",
+      "The updates for this preset package are as follows:\n1. Optimized the print presets for the H3C High Flow and TPU nozzles, matching them with more suitable slicing parameters for more stable print results.",
       false
     ]
   }

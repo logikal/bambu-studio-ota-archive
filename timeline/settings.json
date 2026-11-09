@@ -1,41 +1,41 @@
 {
   "api_query_version": "02.09.00.00",
-  "archive_md5": "4d2427e010e5133eb8621181aafc35b8",
-  "archive_sha256": "e35089b3750e278ec7534586e764888637a93f7022a5605ac59ac74458f47614",
-  "archive_size": 2416719,
+  "archive_md5": "9c01575caa40ac949f2eba62cfb1651e",
+  "archive_sha256": "906d9ee709233825b7ca6bf8b9ea1974c43f901f962320ffc614e68e96823ac2",
+  "archive_size": 2416786,
   "cdn_headers": {
-    "content-length": "2416719",
+    "content-length": "2416786",
     "content-type": "binary/octet-stream",
-    "etag": "\"4d2427e010e5133eb8621181aafc35b8\"",
-    "last-modified": "Fri, 06 Nov 2026 07:44:59 GMT",
-    "x-amz-version-id": "znJWXS0gDMkkKTBAIoJWWmP4hX8SCSAb"
+    "etag": "\"9c01575caa40ac949f2eba62cfb1651e\"",
+    "last-modified": "Mon, 09 Nov 2026 08:49:12 GMT",
+    "x-amz-version-id": "bAiHXh1HTBC6TXELh35dErgFOS67bf2F"
   },
-  "cdn_url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.09.00.75/fed1d2ec22/02.09.00.75.zip",
+  "cdn_url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.09.00.79/ed2f8b9cd0/02.09.00.79.zip",
   "compatibility_family": "02.09",
-  "description": "The updates for this preset package are as follows:\n1. Updated filament parameters for E3D 0.4 & 0.6 hotends\n2. Fixed an issue that prevented certain filaments from printing properly on the Engineering Plate with X1, A1, and other printer series.\n3. Fixed an issue where the AUX1 side panel fan occasionally failed to turn off automatically at the end of a print if any parts had been skipped during printing.",
+  "description": "The updates for this preset package are as follows:\n1. Optimized the print presets for the H3C High Flow and TPU nozzles, matching them with more suitable slicing parameters for more stable print results.",
   "directly_verified": true,
   "evidence": "https://api.bambulab.com/v1/iot-service/api/slicer/resource?slicer%2Fsettings%2Fbbl=02.09.00.00&slicer%2Fprinter%2Fbbl=02.09.00.00",
-  "first_observed_at": "2026-11-06T09:20:01Z",
+  "first_observed_at": "2026-11-09T09:23:07Z",
   "force_update": false,
-  "pack_version": "02.09.00.75",
+  "pack_version": "02.09.00.79",
   "provenance": "observed-api",
   "provenance_chain": [
     "observed-api",
     "retrieved-cdn"
   ],
-  "publication_time": "2026-11-06T07:44:59Z",
+  "publication_time": "2026-11-09T08:49:12Z",
   "publication_time_status": "estimated-from-cdn-last-modified",
   "resource_type": "slicer/settings/bbl",
-  "retrieved_at": "2026-11-06T09:20:04Z",
+  "retrieved_at": "2026-11-09T09:23:10Z",
   "same_version_repack": false,
   "source_commit": null,
-  "source_path": "sources/ota/02.09/settings/02.09.00.75-e35089b3750e",
+  "source_path": "sources/ota/02.09/settings/02.09.00.79-906d9ee70923",
   "source_tree": null,
   "uncertainty": [],
   "validation": {
     "bbl_json_path": "BBL.json",
-    "bbl_version": "02.09.00.75",
-    "expanded_size": 6844664,
+    "bbl_version": "02.09.00.79",
+    "expanded_size": 6846542,
     "file_count": 2735
   }
 }

@@ -1,0 +1,41 @@
+{
+  "api_query_version": "02.09.00.00",
+  "archive_md5": "9c01575caa40ac949f2eba62cfb1651e",
+  "archive_sha256": "906d9ee709233825b7ca6bf8b9ea1974c43f901f962320ffc614e68e96823ac2",
+  "archive_size": 2416786,
+  "cdn_headers": {
+    "content-length": "2416786",
+    "content-type": "binary/octet-stream",
+    "etag": "\"9c01575caa40ac949f2eba62cfb1651e\"",
+    "last-modified": "Mon, 09 Nov 2026 08:49:12 GMT",
+    "x-amz-version-id": "bAiHXh1HTBC6TXELh35dErgFOS67bf2F"
+  },
+  "cdn_url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.09.00.79/ed2f8b9cd0/02.09.00.79.zip",
+  "compatibility_family": "02.09",
+  "description": "The updates for this preset package are as follows:\n1. Optimized the print presets for the H3C High Flow and TPU nozzles, matching them with more suitable slicing parameters for more stable print results.",
+  "directly_verified": true,
+  "evidence": "https://api.bambulab.com/v1/iot-service/api/slicer/resource?slicer%2Fsettings%2Fbbl=02.09.00.00&slicer%2Fprinter%2Fbbl=02.09.00.00",
+  "first_observed_at": "2026-11-09T09:23:07Z",
+  "force_update": false,
+  "pack_version": "02.09.00.79",
+  "provenance": "observed-api",
+  "provenance_chain": [
+    "observed-api",
+    "retrieved-cdn"
+  ],
+  "publication_time": "2026-11-09T08:49:12Z",
+  "publication_time_status": "estimated-from-cdn-last-modified",
+  "resource_type": "slicer/settings/bbl",
+  "retrieved_at": "2026-11-09T09:23:10Z",
+  "same_version_repack": false,
+  "source_commit": null,
+  "source_path": "sources/ota/02.09/settings/02.09.00.79-906d9ee70923",
+  "source_tree": null,
+  "uncertainty": [],
+  "validation": {
+    "bbl_json_path": "BBL.json",
+    "bbl_version": "02.09.00.79",
+    "expanded_size": 6846542,
+    "file_count": 2735
+  }
+}

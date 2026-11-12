@@ -114,16 +114,16 @@
       "query_url": "https://api.bambulab.com/v1/iot-service/api/slicer/resource?slicer%2Fsettings%2Fbbl=02.09.00.00&slicer%2Fprinter%2Fbbl=02.09.00.00",
       "resources": [
         {
-          "description": "The updates for this preset package are as follows:\n1. Optimized the print presets for the H3C High Flow and TPU nozzles, matching them with more suitable slicing parameters for more stable print results.",
+          "description": "The updates for this preset package are as follows:\n1. Fixed an excessively large default line width in the 0.08mm High Quality preset for H3C.\n2. Optimized prime tower settings for H3C PETG Basic to reduce multicolor printing time.",
           "force_update": false,
           "type": "slicer/settings/bbl",
-          "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.09.00.79/ed2f8b9cd0/02.09.00.79.zip",
-          "version": "02.09.00.79"
+          "url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.09.00.81/c1067456be/02.09.00.81.zip",
+          "version": "02.09.00.81"
         }
       ]
     }
   },
-  "generated_at": "2026-11-09T09:23:07Z",
+  "generated_at": "2026-11-12T05:19:06Z",
   "official_families": [
     "02.00",
     "02.01",

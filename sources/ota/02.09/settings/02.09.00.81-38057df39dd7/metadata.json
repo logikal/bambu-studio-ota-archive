@@ -1,0 +1,41 @@
+{
+  "api_query_version": "02.09.00.00",
+  "archive_md5": "e388a82afd2a0cb2e7753fe9a6924d26",
+  "archive_sha256": "38057df39dd78e92f2cb835d4f604e3384e57af84dfdbdedfbfa7dabcf3b9926",
+  "archive_size": 2416744,
+  "cdn_headers": {
+    "content-length": "2416744",
+    "content-type": "binary/octet-stream",
+    "etag": "\"e388a82afd2a0cb2e7753fe9a6924d26\"",
+    "last-modified": "Thu, 12 Nov 2026 03:28:03 GMT",
+    "x-amz-version-id": "K_zBDXD7rkQ8r74c5gfG2lYSJ6oFGzl8"
+  },
+  "cdn_url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.09.00.81/c1067456be/02.09.00.81.zip",
+  "compatibility_family": "02.09",
+  "description": "The updates for this preset package are as follows:\n1. Fixed an excessively large default line width in the 0.08mm High Quality preset for H3C.\n2. Optimized prime tower settings for H3C PETG Basic to reduce multicolor printing time.",
+  "directly_verified": true,
+  "evidence": "https://api.bambulab.com/v1/iot-service/api/slicer/resource?slicer%2Fsettings%2Fbbl=02.09.00.00&slicer%2Fprinter%2Fbbl=02.09.00.00",
+  "first_observed_at": "2026-11-12T05:19:06Z",
+  "force_update": false,
+  "pack_version": "02.09.00.81",
+  "provenance": "observed-api",
+  "provenance_chain": [
+    "observed-api",
+    "retrieved-cdn"
+  ],
+  "publication_time": "2026-11-12T03:28:03Z",
+  "publication_time_status": "estimated-from-cdn-last-modified",
+  "resource_type": "slicer/settings/bbl",
+  "retrieved_at": "2026-11-12T05:19:10Z",
+  "same_version_repack": false,
+  "source_commit": null,
+  "source_path": "sources/ota/02.09/settings/02.09.00.81-38057df39dd7",
+  "source_tree": null,
+  "uncertainty": [],
+  "validation": {
+    "bbl_json_path": "BBL.json",
+    "bbl_version": "02.09.00.81",
+    "expanded_size": 6846320,
+    "file_count": 2735
+  }
+}

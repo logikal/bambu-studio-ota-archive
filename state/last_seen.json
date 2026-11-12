@@ -80,12 +80,12 @@
     ]
   },
   "02.09|slicer/settings/bbl": {
-    "observed_at": "2026-11-09T09:23:07Z",
+    "observed_at": "2026-11-12T05:19:06Z",
     "tuple": [
       "slicer/settings/bbl",
-      "02.09.00.79",
-      "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.09.00.79/ed2f8b9cd0/02.09.00.79.zip",
-      "The updates for this preset package are as follows:\n1. Optimized the print presets for the H3C High Flow and TPU nozzles, matching them with more suitable slicing parameters for more stable print results.",
+      "02.09.00.81",
+      "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.09.00.81/c1067456be/02.09.00.81.zip",
+      "The updates for this preset package are as follows:\n1. Fixed an excessively large default line width in the 0.08mm High Quality preset for H3C.\n2. Optimized prime tower settings for H3C PETG Basic to reduce multicolor printing time.",
       false
     ]
   }

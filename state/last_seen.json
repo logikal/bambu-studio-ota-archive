@@ -80,12 +80,12 @@
     ]
   },
   "02.09|slicer/settings/bbl": {
-    "observed_at": "2026-11-12T05:19:06Z",
+    "observed_at": "2026-11-18T14:19:37Z",
     "tuple": [
       "slicer/settings/bbl",
-      "02.09.00.81",
-      "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.09.00.81/c1067456be/02.09.00.81.zip",
-      "The updates for this preset package are as follows:\n1. Fixed an excessively large default line width in the 0.08mm High Quality preset for H3C.\n2. Optimized prime tower settings for H3C PETG Basic to reduce multicolor printing time.",
+      "02.09.00.83",
+      "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.09.00.83/dc1c96f9a4/02.09.00.83.zip",
+      "The updates for this preset package are as follows:\n1. Optimized the fan parameters during printing for H3C models.",
       false
     ]
   }

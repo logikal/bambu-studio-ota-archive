@@ -1,41 +1,41 @@
 {
   "api_query_version": "02.09.00.00",
-  "archive_md5": "e388a82afd2a0cb2e7753fe9a6924d26",
-  "archive_sha256": "38057df39dd78e92f2cb835d4f604e3384e57af84dfdbdedfbfa7dabcf3b9926",
-  "archive_size": 2416744,
+  "archive_md5": "70fa9d2d3dbe1bc83b979e1c321afbe8",
+  "archive_sha256": "ada4a222d8d9f89f425334530d72cdfa62204af36071af1059da9c67a7be4fb9",
+  "archive_size": 2416851,
   "cdn_headers": {
-    "content-length": "2416744",
+    "content-length": "2416851",
     "content-type": "binary/octet-stream",
-    "etag": "\"e388a82afd2a0cb2e7753fe9a6924d26\"",
-    "last-modified": "Thu, 12 Nov 2026 03:28:03 GMT",
-    "x-amz-version-id": "K_zBDXD7rkQ8r74c5gfG2lYSJ6oFGzl8"
+    "etag": "\"70fa9d2d3dbe1bc83b979e1c321afbe8\"",
+    "last-modified": "Wed, 18 Nov 2026 09:27:04 GMT",
+    "x-amz-version-id": "Lc3NWVLPu3yqBp7nL66V5q1bqlWIMaJ9"
   },
-  "cdn_url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.09.00.81/c1067456be/02.09.00.81.zip",
+  "cdn_url": "https://public-cdn.bblmw.com/upgrade/studio/settings/BBL/02.09.00.83/dc1c96f9a4/02.09.00.83.zip",
   "compatibility_family": "02.09",
-  "description": "The updates for this preset package are as follows:\n1. Fixed an excessively large default line width in the 0.08mm High Quality preset for H3C.\n2. Optimized prime tower settings for H3C PETG Basic to reduce multicolor printing time.",
+  "description": "The updates for this preset package are as follows:\n1. Optimized the fan parameters during printing for H3C models.",
   "directly_verified": true,
   "evidence": "https://api.bambulab.com/v1/iot-service/api/slicer/resource?slicer%2Fsettings%2Fbbl=02.09.00.00&slicer%2Fprinter%2Fbbl=02.09.00.00",
-  "first_observed_at": "2026-11-12T05:19:06Z",
+  "first_observed_at": "2026-11-18T14:19:37Z",
   "force_update": false,
-  "pack_version": "02.09.00.81",
+  "pack_version": "02.09.00.83",
   "provenance": "observed-api",
   "provenance_chain": [
     "observed-api",
     "retrieved-cdn"
   ],
-  "publication_time": "2026-11-12T03:28:03Z",
+  "publication_time": "2026-11-18T09:27:04Z",
   "publication_time_status": "estimated-from-cdn-last-modified",
   "resource_type": "slicer/settings/bbl",
-  "retrieved_at": "2026-11-12T05:19:10Z",
+  "retrieved_at": "2026-11-18T14:19:41Z",
   "same_version_repack": false,
   "source_commit": null,
-  "source_path": "sources/ota/02.09/settings/02.09.00.81-38057df39dd7",
+  "source_path": "sources/ota/02.09/settings/02.09.00.83-ada4a222d8d9",
   "source_tree": null,
   "uncertainty": [],
   "validation": {
     "bbl_json_path": "BBL.json",
-    "bbl_version": "02.09.00.81",
-    "expanded_size": 6846320,
+    "bbl_version": "02.09.00.83",
+    "expanded_size": 6846911,
     "file_count": 2735
   }
 }

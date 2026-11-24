@@ -1,6 +1,6 @@
 {
   "baseline_as_of": "2026-08-18T00:24:18Z",
-  "last_checked_at": "2026-11-03T12:24:00Z",
+  "last_checked_at": "2026-11-24T14:20:01Z",
   "source": "https://github.com/bambulab/BambuStudio",
   "tags": {
     "V02.00.03.54": {
@@ -208,6 +208,17 @@
       "source_path": "sources/git/02.09.00.74-56a57d00a591",
       "source_release_time": "2026-11-03T20:09:55+08:00",
       "source_tree": "7ccf0b466ea106f238ad91424211a806771d08c9",
+      "status": "captured"
+    },
+    "v02.09.02.62": {
+      "first_observed_at": "2026-11-24T14:20:01Z",
+      "profile_version": "02.09.00.89",
+      "source_bbl_json_blob": "f151e7cf3036d12acfc5fe3dbe1178ed75ebdb2c",
+      "source_commit": "23a33758933e712c6041e1f8f135f7d6b50004aa",
+      "source_commit_time": "2026-11-24T18:13:07+08:00",
+      "source_path": "sources/git/02.09.00.89-23a33758933e",
+      "source_release_time": "2026-11-24T21:57:49+08:00",
+      "source_tree": "8a93b9f699e0ec1ae53b2ad16d65ed4a27221744",
       "status": "captured"
     }
   }
